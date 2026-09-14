@@ -1,37 +1,49 @@
 # NS | Nelson Schiavi Soluções Digitais
 
-Desenvolvimento de sites e sistemas web personalizados
-para empresas e profissionais.
+Desenvolvimento de sites e sistemas web personalizados para empresas
+e profissionais.
 
-## Projetos
+## O que eu desenvolvo
+
+- Sites institucionais
+- Landing pages
+- Sistemas web personalizados
+- Agendamento online
+- Painéis administrativos
+- Integrações
+- Automação de processos
+- Dashboards e soluções de dados
+
+## Projeto em destaque
 
 ### Site institucional — Advocacia e Assessoria Jurídica
 
-Site institucional desenvolvido para escritório de advocacia,
-com foco em apresentação profissional, agendamento online
-e experiência responsiva.
+Projeto de site institucional desenvolvido com foco em:
 
-**Tecnologias**
+- Apresentação profissional
+- Design responsivo
+- Agendamento online
+- Painel administrativo
+- Controle de disponibilidade
+- E-mails transacionais
+- Segurança
+- LGPD
+- Experiência em desktop, tablet e mobile
+
+### Tecnologias
+
 - Laravel
 - PHP
 - MySQL
 - Blade
 - Tailwind CSS
 - Alpine.js
+- JavaScript
+- Vite
 
-**Funcionalidades**
-- Site institucional
-- Agendamento online
-- Controle de disponibilidade
-- Painel administrativo
-- Gestão de consultas
-- E-mails transacionais
-- LGPD
-- Segurança
-- Design responsivo
+## Desenvolvimento
 
-**Status:** Projeto em desenvolvimento / homologação
+Projeto desenvolvido por:
 
-**Desenvolvido por**
-Nelson Schiavi
-NS | Nelson Schiavi Soluções Digitais
+**Nelson Schiavi**  
+**NS | Nelson Schiavi Soluções Digitais**
