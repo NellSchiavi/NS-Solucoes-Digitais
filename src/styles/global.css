@@ -1,0 +1,110 @@
+@import "tailwindcss";
+
+/*
+ * Design tokens — NS | Nelson Schiavi Soluções Digitais
+ *
+ * Revisão 2: a primeira versão ficou com fundo/superfícies verde-escuras
+ * demais (lia como "site verde"). Recalibrado a partir de nova análise
+ * da arte de referência: a proporção real lá é PRETO/QUASE-PRETO
+ * dominante, com verde aparecendo só como profundidade sutil nas
+ * superfícies e como destaque pontual (CTAs, ícones, bordas ativas,
+ * logo). O verde neon (--color-brand-500) permanece o mesmo tom vivo;
+ * o que mudou foi reduzir a saturação/tingimento verde do fundo, das
+ * superfícies e das bordas, para o preto voltar a dominar.
+ */
+@theme {
+  /* Fundo — quase preto, verde quase imperceptível */
+  --color-bg: #030504;
+  --color-bg-soft: #070a08;
+  --color-surface: #0b0f0d;
+  --color-surface-hover: #101512;
+  --color-border: #1a1f1c;
+  --color-border-strong: #24352a;
+
+  /* Marca — verde neon (reservado para destaque, não para preencher fundo) */
+  --color-brand-50: #e9fdf1;
+  --color-brand-200: #92f5bd;
+  --color-brand-400: #3fe884;
+  --color-brand-500: #22e070;
+  --color-brand-600: #16c65f;
+  --color-brand-700: #0e9a4a;
+  --color-brand-900: #0a3320;
+
+  /* Texto */
+  --color-ink: #f7faf8;
+  --color-ink-muted: #a7b0ab;
+  --color-ink-faint: #66716b;
+
+  --font-display: "Space Grotesk", "Inter", system-ui, sans-serif;
+  --font-body: "Inter", system-ui, -apple-system, "Segoe UI", sans-serif;
+}
+
+/*
+ * Tema de destaque (seletor no Header).
+ *
+ * O tema padrão é o VERDE definido no @theme acima — é a identidade
+ * principal do site. O tema ROXO troca apenas os tokens de destaque
+ * (brand-*, texto sobre brand, brilhos e a borda de acento); fundo,
+ * superfícies e textos continuam os mesmos.
+ *
+ * - --color-brand-ink: cor do texto sobre fundo brand (botões/filtros).
+ * - --brand-rgb: canais RGB do brand-500, usados nos brilhos/sombras
+ *   com alpha variável: rgb(var(--brand-rgb) / 0.1).
+ *
+ * Contraste (fundo #030504): roxo #a855f7 ≈ 5,1:1 como texto e como
+ * fundo de botão com texto escuro; #c084fc (brand-400, usado nos textos
+ * de destaque) ≈ 7,7:1.
+ */
+@layer base {
+  :root {
+    color-scheme: dark;
+    --color-brand-ink: #03150c;
+    --brand-rgb: 34 224 112;
+  }
+
+  :root[data-theme='purple'] {
+    --color-brand-50: #faf5ff;
+    --color-brand-200: #e9d5ff;
+    --color-brand-400: #c084fc;
+    --color-brand-500: #a855f7;
+    --color-brand-600: #9333ea;
+    --color-brand-700: #7e22ce;
+    --color-brand-900: #2e1050;
+    --color-border-strong: #2c2536;
+    --color-brand-ink: #14061f;
+    --brand-rgb: 168 85 247;
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+    * {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
+
+  body {
+    background-color: var(--color-bg);
+    color: var(--color-ink);
+    font-family: var(--font-body);
+    -webkit-font-smoothing: antialiased;
+  }
+
+  ::selection {
+    background-color: var(--color-brand-500);
+    color: var(--color-bg);
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--color-brand-400);
+    outline-offset: 3px;
+  }
+}

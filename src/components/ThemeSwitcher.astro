@@ -1,0 +1,83 @@
+---
+/**
+ * Seletor da cor de destaque (verde padrão / roxo). Só troca o atributo
+ * `data-theme` no <html>; as cores vêm dos tokens em global.css.
+ * A escolha é lembrada no localStorage ('ns-theme') e aplicada antes da
+ * pintura pelo script inline do BaseLayout.
+ *
+ * As bolinhas usam cor fixa de propósito: representam cada opção e não
+ * podem mudar junto com o tema.
+ */
+import Icon from './Icon.astro';
+
+const options = [
+  { value: 'green', label: 'Destaque verde', swatch: '#22e070' },
+  { value: 'purple', label: 'Destaque roxo', swatch: '#a855f7' },
+];
+---
+
+<div
+  class="theme-switcher inline-flex items-center gap-0.5 rounded-full py-1 pl-2 pr-1 ring-1 ring-[var(--color-border-strong)]"
+  role="group"
+  aria-label="Cor de destaque do site"
+  title="Mudar cor de destaque"
+>
+  <Icon name="palette" class="mr-0.5 h-3.5 w-3.5 text-[var(--color-ink-faint)]" />
+  {options.map((option) => (
+    <button
+      type="button"
+      data-theme-option={option.value}
+      aria-label={option.label}
+      title={option.label}
+      aria-pressed={option.value === 'green' ? 'true' : 'false'}
+      class="theme-option flex h-6 w-6 items-center justify-center rounded-full"
+    >
+      <span class="h-3 w-3 rounded-full" style={`background-color: ${option.swatch}`}></span>
+    </button>
+  ))}
+</div>
+
+<style>
+  .theme-option {
+    transition: box-shadow 0.15s ease;
+  }
+  .theme-option:hover {
+    box-shadow: inset 0 0 0 1px var(--color-border-strong);
+  }
+  /* Estado ativo derivado do <html>, para já nascer correto (sem esperar o JS). */
+  :global(:root:not([data-theme='purple'])) .theme-option[data-theme-option='green'],
+  :global(:root[data-theme='purple']) .theme-option[data-theme-option='purple'] {
+    box-shadow: inset 0 0 0 1.5px var(--color-ink-muted);
+  }
+</style>
+
+<script>
+  const root = document.documentElement;
+  const buttons = document.querySelectorAll<HTMLButtonElement>('[data-theme-option]');
+
+  function syncPressed() {
+    const current = root.dataset.theme === 'purple' ? 'purple' : 'green';
+    buttons.forEach((btn) => {
+      btn.setAttribute('aria-pressed', String(btn.dataset.themeOption === current));
+    });
+  }
+
+  buttons.forEach((btn) => {
+    btn.addEventListener('click', () => {
+      const theme = btn.dataset.themeOption;
+      if (theme === 'purple') {
+        root.dataset.theme = 'purple';
+      } else {
+        delete root.dataset.theme;
+      }
+      try {
+        localStorage.setItem('ns-theme', theme === 'purple' ? 'purple' : 'green');
+      } catch {
+        // Sem localStorage (ex.: navegação privada restrita): troca vale só nesta visita.
+      }
+      syncPressed();
+    });
+  });
+
+  syncPressed();
+</script>

@@ -1,0 +1,40 @@
+---
+import Logo from './Logo.astro';
+import Icon from './Icon.astro';
+import { buildWhatsAppLink, PHONE_DISPLAY } from '../lib/whatsapp';
+
+const year = new Date().getFullYear();
+---
+
+<footer id="contato" class="scroll-mt-20 border-t border-[var(--color-border)] bg-[var(--color-bg-soft)]">
+  <div class="mx-auto max-w-7xl px-5 py-16 sm:px-8">
+    <div class="flex flex-col gap-10 sm:flex-row sm:items-start sm:justify-between">
+      <div class="max-w-sm">
+        <Logo />
+        <p class="mt-4 text-sm leading-relaxed text-[var(--color-ink-muted)]">
+          Desenvolvimento de sites institucionais, landing pages, apps e
+          sistemas web sob medida para o seu negócio.
+        </p>
+      </div>
+
+      <div>
+        <h3 class="text-xs font-semibold uppercase tracking-[0.14em] text-[var(--color-ink-faint)]">
+          Fale comigo
+        </h3>
+        <a
+          href={buildWhatsAppLink()}
+          target="_blank"
+          rel="noopener noreferrer"
+          class="mt-3 inline-flex items-center gap-2 text-sm font-medium text-white hover:text-[var(--color-brand-400)]"
+        >
+          <Icon name="whatsapp" class="h-4 w-4 text-[var(--color-brand-500)]" />
+          WhatsApp — {PHONE_DISPLAY}
+        </a>
+      </div>
+    </div>
+
+    <div class="mt-12 flex flex-col gap-3 border-t border-[var(--color-border)] pt-6 text-xs text-[var(--color-ink-faint)] sm:flex-row sm:items-center sm:justify-between">
+      <p>© {year} NS | Nelson Schiavi Soluções Digitais. Todos os direitos reservados.</p>
+    </div>
+  </div>
+</footer>

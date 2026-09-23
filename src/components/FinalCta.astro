@@ -1,0 +1,26 @@
+---
+import Button from './Button.astro';
+import { buildWhatsAppLink } from '../lib/whatsapp';
+---
+
+<section class="border-t border-[var(--color-border)] py-20 sm:py-28" aria-label="Chamada para orçamento">
+  <div class="mx-auto max-w-4xl px-5 text-center sm:px-8">
+    <div class="relative overflow-hidden rounded-3xl border border-[var(--color-border-strong)] bg-[var(--color-surface)] px-6 py-14 sm:px-16 sm:py-20">
+      <div class="pointer-events-none absolute inset-0 -z-10 bg-[radial-gradient(600px_300px_at_50%_0%,rgb(var(--brand-rgb)/0.10),transparent_70%)]"></div>
+
+      <h2 class="font-[var(--font-display)] text-3xl font-bold tracking-tight text-white sm:text-4xl">
+        Tem uma ideia? Vamos tirar do papel.
+      </h2>
+      <p class="mx-auto mt-4 max-w-xl text-base leading-relaxed text-[var(--color-ink-muted)]">
+        Me conta o que você precisa e eu te retorno com os próximos passos
+        para transformar isso em um site ou sistema de verdade.
+      </p>
+
+      <div class="mt-9 flex justify-center">
+        <Button href={buildWhatsAppLink()} target="_blank" variant="primary" size="lg" icon="whatsapp">
+          Solicitar orçamento
+        </Button>
+      </div>
+    </div>
+  </div>
+</section>

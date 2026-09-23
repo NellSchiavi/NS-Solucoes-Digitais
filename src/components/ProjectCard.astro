@@ -1,0 +1,91 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import Icon from './Icon.astro';
+import { CATEGORY_LABELS } from '../lib/categories';
+import { withBase } from '../lib/url';
+
+interface Props {
+  project: CollectionEntry<'projects'>;
+}
+
+const { project } = Astro.props;
+const { data, id } = project;
+const visibleTechs = data.technologies.slice(0, 4);
+const extraTechs = data.technologies.length - visibleTechs.length;
+const caseUrl = withBase(`/portfolio/${id}/`);
+---
+
+<article
+  data-category={data.category}
+  class="group flex flex-col overflow-hidden rounded-2xl border border-[var(--color-border)] bg-[var(--color-surface)] transition-colors hover:border-[var(--color-brand-500)]/50"
+>
+  <a href={caseUrl} class="relative block aspect-[16/10] overflow-hidden">
+    {data.mainImage ? (
+      <img
+        src={withBase(data.mainImage)}
+        alt={`Screenshot do projeto ${data.name}`}
+        loading="lazy"
+        class="h-full w-full object-cover object-top transition-transform duration-300 group-hover:scale-[1.03]"
+      />
+    ) : (
+      <div class="relative flex h-full w-full items-center justify-center bg-[var(--color-bg-soft)]">
+        <div class="absolute inset-0 bg-[radial-gradient(220px_140px_at_20%_0%,rgb(var(--brand-rgb)/0.14),transparent_70%)]"></div>
+        <div class="absolute -right-6 -top-6 h-24 w-24 -skew-x-12 border border-[var(--color-brand-500)]/20"></div>
+        <span class="relative font-[var(--font-display)] text-2xl font-bold tracking-tight text-[var(--color-ink-faint)]">
+          {data.name
+            .split(' ')
+            .slice(0, 2)
+            .map((w) => w[0])
+            .join('')
+            .toUpperCase()}
+        </span>
+      </div>
+    )}
+
+    {data.featured && (
+      <span class="absolute left-3 top-3 inline-flex items-center gap-1.5 rounded-full bg-[var(--color-bg)]/90 px-3 py-1 text-[0.65rem] font-semibold uppercase tracking-wide text-[var(--color-brand-400)] ring-1 ring-[var(--color-brand-500)]/40">
+        <span class="h-1.5 w-1.5 rounded-full bg-[var(--color-brand-500)]"></span>
+        Destaque
+      </span>
+    )}
+  </a>
+
+  <div class="flex flex-1 flex-col p-6">
+    {data.category && (
+      <span class="text-[0.68rem] font-semibold uppercase tracking-[0.1em] text-[var(--color-brand-400)]">
+        {CATEGORY_LABELS[data.category]}
+      </span>
+    )}
+    <h3 class="mt-2 text-lg font-semibold leading-snug text-white">
+      <a href={caseUrl} class="hover:text-[var(--color-brand-400)]">
+        {data.name}
+      </a>
+    </h3>
+    <p class="mt-2 flex-1 text-sm leading-relaxed text-[var(--color-ink-muted)]">
+      {data.shortDescription}
+    </p>
+
+    {data.technologies.length > 0 && (
+      <div class="mt-4 flex flex-wrap gap-1.5">
+        {visibleTechs.map((tech) => (
+          <span class="rounded-full border border-[var(--color-border-strong)] px-2.5 py-1 text-[0.68rem] font-medium text-[var(--color-ink-muted)]">
+            {tech}
+          </span>
+        ))}
+        {extraTechs > 0 && (
+          <span class="rounded-full border border-[var(--color-border-strong)] px-2.5 py-1 text-[0.68rem] font-medium text-[var(--color-ink-faint)]">
+            +{extraTechs}
+          </span>
+        )}
+      </div>
+    )}
+
+    <a
+      href={caseUrl}
+      class="mt-5 inline-flex items-center gap-1.5 text-sm font-semibold text-white transition-colors hover:text-[var(--color-brand-400)]"
+    >
+      {data.ctaLabel}
+      <Icon name="arrow-right" class="h-4 w-4" />
+    </a>
+  </div>
+</article>

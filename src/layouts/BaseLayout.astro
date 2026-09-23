@@ -1,0 +1,60 @@
+---
+import '../styles/global.css';
+import { withBase } from '../lib/url';
+
+interface Props {
+  title: string;
+  description: string;
+}
+
+const { title, description } = Astro.props;
+
+// `Astro.site` só existe quando `site` está configurado em astro.config.mjs.
+// Ainda não configuramos porque o domínio definitivo não foi confirmado
+// (ver comentário em astro.config.mjs) — por isso canonical/OG:url só são
+// emitidos quando (e se) esse valor existir, em vez de inventar um domínio.
+const canonicalURL = Astro.site ? new URL(Astro.url.pathname, Astro.site) : undefined;
+---
+
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    {canonicalURL && <link rel="canonical" href={canonicalURL} />}
+    <link rel="icon" type="image/svg+xml" href={withBase('/favicon.svg')} />
+    <meta name="theme-color" content="#060f0a" />
+
+    <!--
+      Aplica o tema salvo (seletor no Header) antes da primeira pintura,
+      evitando "piscar" o verde ao carregar com o roxo escolhido. Sem
+      escolha salva (ou sem acesso ao localStorage), fica o verde padrão.
+    -->
+    <script is:inline>
+      try {
+        if (localStorage.getItem('ns-theme') === 'purple') {
+          document.documentElement.dataset.theme = 'purple';
+        }
+      } catch (e) {}
+    </script>
+
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    {canonicalURL && <meta property="og:url" content={canonicalURL} />}
+    <meta property="og:locale" content="pt_BR" />
+    <meta name="twitter:card" content="summary" />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <slot />
+  </body>
+</html>

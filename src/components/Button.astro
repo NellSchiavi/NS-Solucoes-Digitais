@@ -1,0 +1,50 @@
+---
+interface Props {
+  href: string;
+  variant?: 'primary' | 'secondary' | 'ghost';
+  size?: 'md' | 'lg';
+  icon?: 'arrow-right' | 'whatsapp' | 'chevron-right' | 'none';
+  class?: string;
+  target?: '_blank';
+}
+
+import Icon from './Icon.astro';
+
+const {
+  href,
+  variant = 'primary',
+  size = 'md',
+  icon = 'none',
+  class: className = '',
+  target,
+} = Astro.props;
+
+const base =
+  'inline-flex items-center justify-center gap-2 rounded-full font-semibold transition-all duration-200 focus-visible:outline-2 focus-visible:outline-offset-2';
+
+const sizes = {
+  md: 'px-5 py-2.5 text-sm',
+  lg: 'px-7 py-3.5 text-base',
+};
+
+const variants = {
+  primary:
+    'bg-[var(--color-brand-500)] text-[var(--color-brand-ink)] hover:bg-[var(--color-brand-400)] hover:-translate-y-0.5 shadow-[0_0_0_1px_rgb(var(--brand-rgb)/0.35),0_10px_30px_-10px_rgb(var(--brand-rgb)/0.55)]',
+  secondary:
+    'bg-transparent text-white ring-1 ring-[var(--color-border-strong)] hover:ring-[var(--color-brand-500)] hover:text-[var(--color-brand-400)]',
+  ghost:
+    'bg-transparent text-[var(--color-ink-muted)] hover:text-white',
+};
+---
+
+<a
+  href={href}
+  target={target}
+  rel={target === '_blank' ? 'noopener noreferrer' : undefined}
+  class={`${base} ${sizes[size]} ${variants[variant]} ${className}`}
+>
+  {icon === 'whatsapp' && <Icon name="whatsapp" class="h-4 w-4" />}
+  <slot />
+  {icon === 'arrow-right' && <Icon name="arrow-right" class="h-4 w-4" />}
+  {icon === 'chevron-right' && <Icon name="chevron-right" class="h-4 w-4" />}
+</a>

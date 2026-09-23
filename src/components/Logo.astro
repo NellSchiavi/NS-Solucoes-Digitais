@@ -1,0 +1,28 @@
+---
+/**
+ * Marca NS — arquivo oficial fornecido por Nelson (monograma + wordmark
+ * já compostos em uma única imagem, fundo transparente).
+ *
+ * Fonte da verdade: /logo/logo-ns-transparente.png
+ * (copiado de "logo/logo-ns-transparente.png" na raiz do projeto).
+ *
+ * NÃO redesenhar, recriar ou reinterpretar essa marca em SVG — usar
+ * sempre este arquivo como está, sem cor, filtro ou distorção.
+ */
+interface Props {
+  class?: string;
+}
+import { withBase } from '../lib/url';
+
+const { class: className = '' } = Astro.props;
+---
+
+<a href={withBase('/')} class={`group inline-flex items-center ${className}`} aria-label="NS | Nelson Schiavi Soluções Digitais — página inicial">
+  <img
+    src={withBase('/logo/logo-ns-transparente.png')}
+    alt="NS | Nelson Schiavi Soluções Digitais"
+    class="h-8 w-auto object-contain sm:h-9"
+    width="373"
+    height="124"
+  />
+</a>
