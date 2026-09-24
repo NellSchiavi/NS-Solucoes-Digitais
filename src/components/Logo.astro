@@ -11,17 +11,19 @@
  */
 interface Props {
   class?: string;
+  /** Tamanho da imagem — padrão é o do Header. */
+  imgClass?: string;
 }
 import { withBase } from '../lib/url';
 
-const { class: className = '' } = Astro.props;
+const { class: className = '', imgClass = 'h-8 w-auto object-contain sm:h-9' } = Astro.props;
 ---
 
 <a href={withBase('/')} class={`group inline-flex items-center ${className}`} aria-label="NS | Nelson Schiavi Soluções Digitais — página inicial">
   <img
     src={withBase('/logo/logo-ns-transparente.png')}
     alt="NS | Nelson Schiavi Soluções Digitais"
-    class="h-8 w-auto object-contain sm:h-9"
+    class={imgClass}
     width="373"
     height="124"
   />
