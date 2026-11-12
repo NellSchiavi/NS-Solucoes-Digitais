@@ -16,8 +16,8 @@ const projects = defineCollection({
   loader: glob({ pattern: '**/*.md', base: './src/content/projects' }),
   schema: z.object({
     name: z.string(),
-    // Opcional: alguns projetos (ex. Cibelle) ainda não têm a categoria
-    // confirmada. Sem confirmação, o campo fica vazio em vez de adivinhado.
+    // Opcional: sem categoria confirmada, o campo fica vazio em vez de
+    // adivinhado.
     category: z
       .enum([
         'sites-institucionais',
@@ -45,7 +45,19 @@ const projects = defineCollection({
     additionalImages: z
       .array(z.union([z.string(), z.object({ src: z.string(), caption: z.string() })]))
       .default([]),
+    // Endereço do site/sistema publicado do cliente ("Ver site no ar").
     projectUrl: z.string().url().optional(),
+    // Ambiente público de demonstração com dados fictícios
+    // ("Experimentar demonstração"). Tem prioridade sobre projectUrl.
+    demoUrl: z.string().url().optional(),
+    // Instruções curtas para o visitante usar a demonstração. Só são
+    // exibidas quando há demoUrl.
+    demoNotes: z.array(z.string()).default([]),
+    // Uma frase: o problema que o projeto resolve (card e página do case).
+    problem: z.string().optional(),
+    // Mensagem pré-preenchida do WhatsApp para este case. Sem ela, usa a
+    // mensagem padrão da categoria (src/lib/projects.ts).
+    whatsappMessage: z.string().optional(),
     ctaLabel: z.string().default('Ver case'),
     featured: z.boolean().default(false),
     order: z.number().default(99),

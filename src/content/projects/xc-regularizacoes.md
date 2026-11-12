@@ -7,9 +7,11 @@ technologies: []
 status: "publicado"
 visibility: "publico"
 featured: false
-order: 2
+order: 3
 projectUrl: "https://xcregularizacoes.com.br/"
-ctaLabel: "Ver projeto"
+problem: "Apresentar a empresa e seus serviços de regularização fundiária, informar o público sobre o tema e receber pedidos de orçamento."
+whatsappMessage: "Olá! Vi o projeto XC Regularizações no portfólio da NS e gostaria de um orçamento para um site institucional."
+ctaLabel: "Ver case"
 mainImage: "/imagens/Projects/xc-regularizacoes/capa.png"
 additionalImages:
   - src: "/imagens/Projects/xc-regularizacoes/projetos.png"

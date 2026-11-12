@@ -15,7 +15,9 @@ technologies:
 status: "desenvolvido"
 visibility: "publico"
 featured: false
-order: 3
+order: 4
+problem: "Centralizar o acompanhamento de processos de REURB, substituindo planilhas e controles descentralizados, com um portal para os interessados acompanharem o andamento."
+whatsappMessage: "Olá! Vi o REURB Flow no portfólio da NS e gostaria de conhecer melhor o desenvolvimento de sistemas de gestão e CRM."
 ctaLabel: "Ver case"
 mainImage: "/imagens/Projects/reurb-flow/dashboard.png"
 additionalImages:
@@ -31,7 +33,7 @@ additionalImages:
     caption: "Portal do Interessado: andamento, etapas e documentos do Núcleo"
   - src: "/imagens/Projects/reurb-flow/capa.png"
     caption: "Tela de login"
-internalNotes: "Stack confirmada no repositório reurb-flow (package.json de apps/web e apps/api + schema Prisma). Screenshots com dados de teste. documentos.png NÃO usado: nome de arquivo real riscado à mão, parcialmente legível. Status de publicação e URL pública ainda não confirmados."
+internalNotes: "Stack confirmada no repositório reurb-flow (package.json de apps/web e apps/api + schema Prisma). Screenshots com dados de teste. documentos.png NÃO usado: nome de arquivo real riscado à mão, parcialmente legível. Sem demonstração pública e sem link externo por decisão do Nelson (2026-11-12): apresentado como projeto desenvolvido, com capturas reais."
 ---
 
 ## Contexto

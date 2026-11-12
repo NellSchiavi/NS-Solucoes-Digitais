@@ -13,7 +13,10 @@ technologies:
 status: "publicado"
 visibility: "publico"
 featured: true
-order: 1
+order: 2
+projectUrl: "https://dravaldiziamelo.com.br/"
+problem: "Apresentar o escritório com credibilidade e permitir que clientes agendem consultas online, com agenda e disponibilidade controladas pela própria advogada."
+whatsappMessage: "Olá! Vi o projeto da Dra. Valdizia Melo no portfólio da NS e gostaria de um orçamento para um site com agendamento online."
 ctaLabel: "Ver case"
 mainImage: "/imagens/Projects/dra-valdizia-melo/Capa.png"
 additionalImages:

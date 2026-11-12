@@ -3,6 +3,7 @@ import type { CollectionEntry } from 'astro:content';
 import Icon from './Icon.astro';
 import { CATEGORY_LABELS } from '../lib/categories';
 import { withBase } from '../lib/url';
+import { getInitials, getPrimaryAction, getStatusLabel } from '../lib/projects';
 
 interface Props {
   project: CollectionEntry<'projects'>;
@@ -13,17 +14,19 @@ const { data, id } = project;
 const visibleTechs = data.technologies.slice(0, 4);
 const extraTechs = data.technologies.length - visibleTechs.length;
 const caseUrl = withBase(`/portfolio/${id}/`);
+const primaryAction = getPrimaryAction(data);
+const statusLabel = getStatusLabel(data);
 ---
 
 <article
   data-category={data.category}
   class="group flex flex-col overflow-hidden rounded-2xl border border-[var(--color-border)] bg-[var(--color-surface)] transition-colors hover:border-[var(--color-brand-500)]/50"
 >
-  <a href={caseUrl} class="relative block aspect-[16/10] overflow-hidden">
+  <a href={caseUrl} class="relative block aspect-[16/10] overflow-hidden" tabindex="-1" aria-hidden="true">
     {data.mainImage ? (
       <img
         src={withBase(data.mainImage)}
-        alt={`Screenshot do projeto ${data.name}`}
+        alt=""
         loading="lazy"
         class="h-full w-full object-cover object-top transition-transform duration-300 group-hover:scale-[1.03]"
       />
@@ -32,12 +35,7 @@ const caseUrl = withBase(`/portfolio/${id}/`);
         <div class="absolute inset-0 bg-[radial-gradient(220px_140px_at_20%_0%,rgb(var(--brand-rgb)/0.14),transparent_70%)]"></div>
         <div class="absolute -right-6 -top-6 h-24 w-24 -skew-x-12 border border-[var(--color-brand-500)]/20"></div>
         <span class="relative font-[var(--font-display)] text-2xl font-bold tracking-tight text-[var(--color-ink-faint)]">
-          {data.name
-            .split(' ')
-            .slice(0, 2)
-            .map((w) => w[0])
-            .join('')
-            .toUpperCase()}
+          {getInitials(data.name)}
         </span>
       </div>
     )}
@@ -51,19 +49,43 @@ const caseUrl = withBase(`/portfolio/${id}/`);
   </a>
 
   <div class="flex flex-1 flex-col p-6">
-    {data.category && (
-      <span class="text-[0.68rem] font-semibold uppercase tracking-[0.1em] text-[var(--color-brand-400)]">
-        {CATEGORY_LABELS[data.category]}
-      </span>
-    )}
-    <h3 class="mt-2 text-lg font-semibold leading-snug text-white">
+    <div class="flex flex-wrap items-center justify-between gap-x-3 gap-y-2">
+      {data.category && (
+        <span class="text-[0.68rem] font-semibold uppercase tracking-[0.1em] text-[var(--color-brand-400)]">
+          {CATEGORY_LABELS[data.category]}
+        </span>
+      )}
+      {statusLabel && (
+        <span
+          class:list={[
+            'inline-flex items-center gap-1.5 rounded-full px-2.5 py-0.5 text-[0.68rem] font-medium ring-1',
+            primaryAction
+              ? 'text-[var(--color-brand-400)] ring-[var(--color-brand-500)]/40'
+              : 'text-[var(--color-ink-muted)] ring-[var(--color-border-strong)]',
+          ]}
+        >
+          {primaryAction && <span class="h-1.5 w-1.5 rounded-full bg-[var(--color-brand-500)]" aria-hidden="true"></span>}
+          {statusLabel}
+        </span>
+      )}
+    </div>
+
+    <h3 class="mt-3 text-lg font-semibold leading-snug text-white">
       <a href={caseUrl} class="hover:text-[var(--color-brand-400)]">
         {data.name}
       </a>
     </h3>
-    <p class="mt-2 flex-1 text-sm leading-relaxed text-[var(--color-ink-muted)]">
+    <p class="mt-2 text-sm leading-relaxed text-[var(--color-ink-muted)]">
       {data.shortDescription}
     </p>
+
+    {data.problem && (
+      <p class="mt-3 border-l-2 border-[var(--color-brand-500)]/50 pl-3 text-xs leading-relaxed text-[var(--color-ink-muted)]">
+        <span class="font-semibold text-white">O que resolve:</span> {data.problem}
+      </p>
+    )}
+
+    <div class="flex-1"></div>
 
     {data.technologies.length > 0 && (
       <div class="mt-4 flex flex-wrap gap-1.5">
@@ -80,12 +102,27 @@ const caseUrl = withBase(`/portfolio/${id}/`);
       </div>
     )}
 
-    <a
-      href={caseUrl}
-      class="mt-5 inline-flex items-center gap-1.5 text-sm font-semibold text-white transition-colors hover:text-[var(--color-brand-400)]"
-    >
-      {data.ctaLabel}
-      <Icon name="arrow-right" class="h-4 w-4" />
-    </a>
+    <div class="mt-5 flex flex-wrap items-center gap-x-5 gap-y-3">
+      {primaryAction && (
+        <a
+          href={primaryAction.href}
+          target="_blank"
+          rel="noopener noreferrer"
+          class="inline-flex items-center gap-1.5 rounded-full bg-[var(--color-brand-500)] px-4 py-2 text-sm font-semibold text-[var(--color-brand-ink)] transition-colors hover:bg-[var(--color-brand-400)] focus-visible:outline-2 focus-visible:outline-offset-2"
+        >
+          {primaryAction.label}
+          <Icon name="arrow-right" class="h-4 w-4" />
+          <span class="sr-only">(abre em nova aba)</span>
+        </a>
+      )}
+      <a
+        href={caseUrl}
+        class="inline-flex items-center gap-1.5 text-sm font-semibold text-white transition-colors hover:text-[var(--color-brand-400)]"
+      >
+        {data.ctaLabel}
+        <Icon name="arrow-right" class="h-4 w-4" />
+        <span class="sr-only">: {data.name}</span>
+      </a>
+    </div>
   </div>
 </article>
