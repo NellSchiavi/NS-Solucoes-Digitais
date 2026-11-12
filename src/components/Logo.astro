@@ -3,28 +3,34 @@
  * Marca NS — arquivo oficial fornecido por Nelson (monograma + wordmark
  * já compostos em uma única imagem, fundo transparente).
  *
- * Fonte da verdade: /logo/logo-ns-transparente.png
- * (copiado de "logo/logo-ns-transparente.png" na raiz do projeto).
+ * Fonte da verdade: src/assets/brand/logo-ns-transparente.png
+ * (cópia de "Logo/logo-ns-transparente.png" na raiz do projeto).
+ * No build, o Astro serve uma versão WebP do mesmo arquivo, no tamanho
+ * original — sem recorte, cor, filtro ou distorção.
  *
  * NÃO redesenhar, recriar ou reinterpretar essa marca em SVG — usar
- * sempre este arquivo como está, sem cor, filtro ou distorção.
+ * sempre este arquivo como está.
  */
+import { Image } from 'astro:assets';
+import logo from '../assets/brand/logo-ns-transparente.png';
+import { withBase } from '../lib/url';
+
 interface Props {
   class?: string;
   /** Tamanho da imagem — padrão é o do Header. */
   imgClass?: string;
 }
-import { withBase } from '../lib/url';
 
 const { class: className = '', imgClass = 'h-8 w-auto object-contain sm:h-9' } = Astro.props;
 ---
 
 <a href={withBase('/')} class={`group inline-flex items-center ${className}`} aria-label="NS | Nelson Schiavi Soluções Digitais — página inicial">
-  <img
-    src={withBase('/logo/logo-ns-transparente.png')}
+  <Image
+    src={logo}
     alt="NS | Nelson Schiavi Soluções Digitais"
+    format="webp"
+    quality={90}
+    loading="eager"
     class={imgClass}
-    width="373"
-    height="124"
   />
 </a>

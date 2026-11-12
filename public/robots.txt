@@ -1,2 +1,4 @@
 User-agent: *
 Allow: /
+
+Sitemap: https://nellschiavi.github.io/NS-Solucoes-Digitais/sitemap-index.xml

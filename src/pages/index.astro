@@ -9,11 +9,19 @@ import About from '../components/About.astro';
 import Differentiators from '../components/Differentiators.astro';
 import FinalCta from '../components/FinalCta.astro';
 import Footer from '../components/Footer.astro';
+import { getImage } from 'astro:assets';
+import logo from '../assets/brand/logo-ns-transparente.png';
+import { organizationJsonLd } from '../lib/seo';
+
+// Logo em PNG com URL absoluta para o Schema.org (o mesmo arquivo oficial).
+const logoImage = await getImage({ src: logo, format: 'png' });
+const jsonLd = organizationJsonLd(Astro.site!, new URL(logoImage.src, Astro.site).href);
 ---
 
 <BaseLayout
-  title="NS | Nelson Schiavi Soluções Digitais — Sites e Sistemas Web sob medida"
-  description="Desenvolvimento de sites institucionais, landing pages, apps e sistemas web sob medida. Solicite um orçamento pelo WhatsApp."
+  title="Sites e sistemas personalizados para empresas | NS Soluções Digitais"
+  description="Sites institucionais, sistemas web, CRM e agendamento online sob medida para empresas, com atendimento direto com o desenvolvedor. Peça um orçamento."
+  jsonLd={jsonLd}
 >
   <Header />
   <main>

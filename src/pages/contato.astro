@@ -7,6 +7,7 @@
  * o foco nos dois caminhos: orçamento pelo WhatsApp e projetos.
  * Textos reaproveitam a comunicação institucional da Home.
  */
+import { Image } from 'astro:assets';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import Logo from '../components/Logo.astro';
 import Button from '../components/Button.astro';
@@ -16,6 +17,11 @@ import { CATEGORY_LABELS } from '../lib/categories';
 import { buildWhatsAppLink } from '../lib/whatsapp';
 import { withBase } from '../lib/url';
 import { getInitials, getPortfolioProjects, getStatusLabel } from '../lib/projects';
+import { contactPageJsonLd } from '../lib/seo';
+
+const pageTitle = 'Contato e orçamento | NS Soluções Digitais';
+const pageDescription =
+  'Solicite pelo WhatsApp um orçamento para o seu site ou sistema web. Na NS, o atendimento é direto com o desenvolvedor responsável pelo projeto.';
 
 const whatsAppLink = buildWhatsAppLink();
 const portfolioLink = withBase('/#portfolio');
@@ -35,8 +41,9 @@ const services = [
 ---
 
 <BaseLayout
-  title="Contato — NS | Nelson Schiavi Soluções Digitais"
-  description="Nelson Schiavi desenvolve sites institucionais, landing pages, sistemas web e apps personalizados. Conheça os projetos ou fale direto pelo WhatsApp."
+  title={pageTitle}
+  description={pageDescription}
+  jsonLd={contactPageJsonLd(Astro.site!, pageTitle, pageDescription)}
 >
   <main class="relative overflow-hidden">
     <!-- Acentos de fundo — mesmos da Hero, discretos -->
@@ -111,10 +118,15 @@ const services = [
                 >
                   <div class="aspect-[16/10] w-28 shrink-0 overflow-hidden rounded-lg bg-[var(--color-bg-soft)] sm:w-full sm:rounded-none">
                     {project.data.mainImage ? (
-                      <img
-                        src={withBase(project.data.mainImage)}
+                      <Image
+                        src={project.data.mainImage}
                         alt=""
+                        widths={[240, 480]}
+                        sizes="(min-width: 640px) 410px, 112px"
+                        format="webp"
+                        quality={80}
                         loading="lazy"
+                        decoding="async"
                         class="h-full w-full object-cover object-top"
                       />
                     ) : (

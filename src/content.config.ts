@@ -14,7 +14,9 @@ import { glob } from 'astro/loaders';
  */
 const projects = defineCollection({
   loader: glob({ pattern: '**/*.md', base: './src/content/projects' }),
-  schema: z.object({
+  // `image()` faz o Astro validar o caminho da imagem (em src/assets) e
+  // processá-la no build: WebP, tamanhos responsivos e width/height.
+  schema: ({ image }) => z.object({
     name: z.string(),
     // Opcional: sem categoria confirmada, o campo fica vazio em vez de
     // adivinhado.
@@ -39,11 +41,14 @@ const projects = defineCollection({
     visibility: z.enum(['publico', 'privado', 'oculto']),
     // Sem imagem real ainda -> a UI renderiza um placeholder visual
     // (não fotográfico) em vez de imagem de banco/genérica.
-    mainImage: z.string().optional(),
+    // Caminhos relativos ao arquivo .md (ex.: ../../assets/projects/...).
+    mainImage: image().optional(),
+    // Texto alternativo descritivo da imagem principal.
+    mainImageAlt: z.string().optional(),
     // Caminho simples ou { src, caption } quando a imagem precisa de
     // legenda (ex.: identificar qual tela/funcionalidade do sistema é).
     additionalImages: z
-      .array(z.union([z.string(), z.object({ src: z.string(), caption: z.string() })]))
+      .array(z.union([image(), z.object({ src: image(), caption: z.string() })]))
       .default([]),
     // Endereço do site/sistema publicado do cliente ("Ver site no ar").
     projectUrl: z.string().url().optional(),

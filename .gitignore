@@ -18,6 +18,9 @@ npm-debug.log*
 /Imagem referencia/
 /Logo/
 
+# backups locais de arquivos originais (os originais também ficam no histórico do Git)
+/_backup/
+
 # macOS
 .DS_Store
 

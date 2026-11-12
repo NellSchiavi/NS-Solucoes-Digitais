@@ -78,6 +78,11 @@ export function getWhatsAppMessage(data: ProjectData): string {
     : WHATSAPP_MESSAGES.site;
 }
 
+/** Nome curto do projeto ("Dra. Valdizia Melo — Advocacia…" → "Dra. Valdizia Melo"). */
+export function getShortName(name: string): string {
+  return name.split(' — ')[0];
+}
+
 /** Iniciais usadas no placeholder visual quando o projeto ainda não tem imagem. */
 export function getInitials(name: string): string {
   return name

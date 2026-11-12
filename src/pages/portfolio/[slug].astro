@@ -1,5 +1,6 @@
 ---
 import { getCollection, render } from 'astro:content';
+import { Image, getImage } from 'astro:assets';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import Header from '../../components/Header.astro';
 import Footer from '../../components/Footer.astro';
@@ -8,7 +9,8 @@ import { CATEGORY_LABELS } from '../../lib/categories';
 import Icon from '../../components/Icon.astro';
 import { buildWhatsAppLink } from '../../lib/whatsapp';
 import { withBase } from '../../lib/url';
-import { getPrimaryAction, getStatusLabel, getWhatsAppMessage } from '../../lib/projects';
+import { caseJsonLd } from '../../lib/seo';
+import { getPrimaryAction, getShortName, getStatusLabel, getWhatsAppMessage } from '../../lib/projects';
 
 export async function getStaticPaths() {
   const projects = await getCollection('projects', ({ data }) => data.visibility !== 'oculto');
@@ -22,11 +24,34 @@ const { project } = Astro.props;
 const { data } = project;
 const { Content } = await render(project);
 
-const gallery = data.additionalImages.map((image) =>
-  typeof image === 'string'
-    ? { src: withBase(image), caption: undefined }
-    : { ...image, src: withBase(image.src) },
+const shortName = getShortName(data.name);
+
+// Galeria: miniatura responsiva no grid + versão WebP grande para o link
+// "abrir imagem ampliada" (no máximo 1920 px, sem ampliar além do original).
+const gallery = await Promise.all(
+  data.additionalImages.map(async (item) => {
+    const image = 'caption' in item ? item : { src: item, caption: undefined };
+    const full = await getImage({
+      src: image.src,
+      width: Math.min(image.src.width, 1920),
+      format: 'webp',
+      quality: 85,
+    });
+    return { ...image, fullSrc: full.src };
+  }),
 );
+
+// SEO do case: título único por projeto + Schema.org (projeto e trilha).
+const pageTitle = `${shortName}${data.category ? ` — ${CATEGORY_LABELS[data.category]}` : ''} | Case NS Soluções Digitais`;
+const schemaImage = data.mainImage
+  ? new URL((await getImage({ src: data.mainImage, width: 1200, format: 'webp', quality: 80 })).src, Astro.site).href
+  : undefined;
+const jsonLd = caseJsonLd(Astro.site!, {
+  slug: project.id,
+  name: shortName,
+  description: data.shortDescription,
+  image: schemaImage,
+});
 
 const primaryAction = getPrimaryAction(data);
 const statusLabel = getStatusLabel(data);
@@ -35,8 +60,10 @@ const showDemoNotes = primaryAction?.kind === 'demo' && data.demoNotes.length > 
 ---
 
 <BaseLayout
-  title={`${data.name} — Case | NS Soluções Digitais`}
+  title={pageTitle}
   description={data.shortDescription}
+  type="article"
+  jsonLd={jsonLd}
 >
   <Header />
   <main>
@@ -132,9 +159,15 @@ const showDemoNotes = primaryAction?.kind === 'demo' && data.demoNotes.length > 
     <!-- Imagem principal / placeholder -->
     <section class="mx-auto max-w-4xl px-5 py-10 sm:px-8">
       {data.mainImage ? (
-        <img
-          src={withBase(data.mainImage)}
-          alt={`Screenshot principal do projeto ${data.name}`}
+        <Image
+          src={data.mainImage}
+          alt={data.mainImageAlt ?? `Tela principal do projeto ${shortName}`}
+          widths={[832, 1664]}
+          sizes="(min-width: 896px) 832px, 100vw"
+          format="webp"
+          quality={80}
+          loading="eager"
+          decoding="async"
           class="w-full rounded-2xl border border-[var(--color-border)]"
         />
       ) : (
@@ -172,16 +205,21 @@ const showDemoNotes = primaryAction?.kind === 'demo' && data.demoNotes.length > 
           {gallery.map((image, index) => (
             <figure>
               <a
-                href={image.src}
+                href={image.fullSrc}
                 target="_blank"
                 rel="noopener noreferrer"
                 class="block overflow-hidden rounded-xl border border-[var(--color-border)] transition-colors hover:border-[var(--color-brand-500)]/50"
-                aria-label={`Abrir imagem ampliada: ${image.caption ?? `imagem ${index + 1}`}`}
+                aria-label={`Abrir imagem ampliada em nova aba: ${image.caption ?? `imagem ${index + 1}`}`}
               >
-                <img
+                <Image
                   src={image.src}
-                  alt={image.caption ? `${data.name} — ${image.caption}` : `${data.name} — imagem ${index + 1}`}
+                  alt={image.caption ? `${shortName} — ${image.caption}` : `${shortName} — tela ${index + 1}`}
+                  widths={[480, 960]}
+                  sizes="(min-width: 896px) 408px, (min-width: 640px) 50vw, 100vw"
+                  format="webp"
+                  quality={80}
                   loading="lazy"
+                  decoding="async"
                   class="w-full"
                 />
               </a>

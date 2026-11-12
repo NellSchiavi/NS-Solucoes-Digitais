@@ -33,10 +33,12 @@
   /* Texto */
   --color-ink: #f7faf8;
   --color-ink-muted: #a7b0ab;
-  --color-ink-faint: #66716b;
+  /* #78837d: contraste ≥ 4,69:1 em todos os fundos (WCAG AA para texto pequeno). */
+  --color-ink-faint: #78837d;
 
-  --font-display: "Space Grotesk", "Inter", system-ui, sans-serif;
-  --font-body: "Inter", system-ui, -apple-system, "Segoe UI", sans-serif;
+  /* Famílias servidas pelo próprio site (astro.config.mjs → fonts). */
+  --font-display: var(--font-space-grotesk), sans-serif;
+  --font-body: var(--font-inter), system-ui, sans-serif;
 }
 
 /*

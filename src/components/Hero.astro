@@ -68,8 +68,13 @@ const highlights = [
       </ul>
     </div>
 
-    <!-- Composição visual: interface estilizada (ilustrativa, sem dados) -->
-    <div class="relative" aria-hidden={demo ? undefined : 'true'}>
+    <!--
+      Composição visual: interface estilizada (ilustrativa, sem dados).
+      No desktop fica ancorada no topo com margem fixa (lg:self-start), em vez
+      de centralizada: assim não "pula" quando as fontes terminam de carregar
+      e mudam a altura do texto ao lado (evita layout shift / CLS).
+    -->
+    <div class="relative lg:mt-36 lg:self-start" aria-hidden={demo ? undefined : 'true'}>
       <div class="absolute -inset-6 -z-10 rounded-[28px] bg-[radial-gradient(260px_260px_at_75%_15%,rgb(var(--brand-rgb)/0.16),transparent_65%)]" aria-hidden="true"></div>
 
       <div class="overflow-hidden rounded-2xl border border-[var(--color-border-strong)] bg-[var(--color-bg-soft)] shadow-[0_30px_80px_-30px_rgba(0,0,0,0.7)]" aria-hidden="true">

@@ -1,19 +1,41 @@
 ---
 import '../styles/global.css';
+import { Font } from 'astro:assets';
 import { withBase } from '../lib/url';
+import { SITE_NAME } from '../lib/seo';
 
 interface Props {
+  /** <title> e og:title — único por página. */
   title: string;
+  /** meta description e og:description — única por página. */
   description: string;
+  /** Imagem de compartilhamento (caminho em public/). Padrão: og-ns.png. */
+  image?: { path: string; width: number; height: number; alt: string };
+  /** 'website' na Home/Contato, 'article' nos cases. */
+  type?: 'website' | 'article';
+  /** Dados estruturados Schema.org (um objeto JSON-LD). */
+  jsonLd?: Record<string, unknown>;
 }
 
-const { title, description } = Astro.props;
+const DEFAULT_IMAGE = {
+  path: '/og-ns.png',
+  width: 1200,
+  height: 630,
+  alt: 'NS Soluções Digitais — Sua ideia em um site de verdade.',
+};
 
-// `Astro.site` só existe quando `site` está configurado em astro.config.mjs.
-// Ainda não configuramos porque o domínio definitivo não foi confirmado
-// (ver comentário em astro.config.mjs) — por isso canonical/OG:url só são
-// emitidos quando (e se) esse valor existir, em vez de inventar um domínio.
-const canonicalURL = Astro.site ? new URL(Astro.url.pathname, Astro.site) : undefined;
+const { title, description, image = DEFAULT_IMAGE, type = 'website', jsonLd } = Astro.props;
+
+// URLs absolutas a partir de `site` + `base` do astro.config.mjs
+// (hoje: https://nellschiavi.github.io/NS-Solucoes-Digitais/...).
+// Astro.url.pathname já inclui o prefixo /NS-Solucoes-Digitais/.
+const site = Astro.site!;
+const canonicalURL = new URL(Astro.url.pathname, site).href;
+const imageURL = new URL(withBase(image.path), site).href;
+
+// JSON seguro dentro de <script>: impede que um "</script>" em algum texto
+// encerre a tag antes da hora.
+const jsonLdString = jsonLd ? JSON.stringify(jsonLd).replace(/</g, '\\u003c') : undefined;
 ---
 
 <!doctype html>
@@ -23,23 +45,38 @@ const canonicalURL = Astro.site ? new URL(Astro.url.pathname, Astro.site) : unde
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
     <title>{title}</title>
     <meta name="description" content={description} />
-    {canonicalURL && <link rel="canonical" href={canonicalURL} />}
+    <link rel="canonical" href={canonicalURL} />
+    <meta name="robots" content="index, follow, max-image-preview:large" />
     <link rel="icon" type="image/svg+xml" href={withBase('/favicon.svg')} />
-    <meta name="theme-color" content="#060f0a" />
+    <link rel="sitemap" type="application/xml" href={withBase('/sitemap-index.xml')} />
+    <meta name="theme-color" content="#030504" />
 
-    <meta property="og:type" content="website" />
+    <!-- Open Graph (WhatsApp, LinkedIn, Facebook e afins) -->
+    <meta property="og:type" content={type} />
+    <meta property="og:site_name" content={SITE_NAME} />
+    <meta property="og:locale" content="pt_BR" />
+    <meta property="og:url" content={canonicalURL} />
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
-    {canonicalURL && <meta property="og:url" content={canonicalURL} />}
-    <meta property="og:locale" content="pt_BR" />
-    <meta name="twitter:card" content="summary" />
+    <meta property="og:image" content={imageURL} />
+    <meta property="og:image:secure_url" content={imageURL} />
+    <meta property="og:image:type" content="image/png" />
+    <meta property="og:image:width" content={String(image.width)} />
+    <meta property="og:image:height" content={String(image.height)} />
+    <meta property="og:image:alt" content={image.alt} />
 
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap"
-      rel="stylesheet"
-    />
+    <!-- Twitter / X -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={imageURL} />
+    <meta name="twitter:image:alt" content={image.alt} />
+
+    {jsonLdString && <script type="application/ld+json" set:html={jsonLdString} />}
+
+    <!-- Fontes servidas pelo próprio site, com preload (ver astro.config.mjs). -->
+    <Font cssVariable="--font-inter" preload />
+    <Font cssVariable="--font-space-grotesk" preload />
   </head>
   <body>
     <slot />
