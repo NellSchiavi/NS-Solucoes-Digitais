@@ -112,7 +112,7 @@ const statusLabel = getStatusLabel(data);
         >
           {primaryAction.label}
           <Icon name="arrow-right" class="h-4 w-4" />
-          <span class="sr-only">(abre em nova aba)</span>
+          {' '}<span class="sr-only">(abre em nova aba)</span>
         </a>
       )}
       <a
@@ -121,7 +121,7 @@ const statusLabel = getStatusLabel(data);
       >
         {data.ctaLabel}
         <Icon name="arrow-right" class="h-4 w-4" />
-        <span class="sr-only">: {data.name}</span>
+        {' '}<span class="sr-only">: {data.name}</span>
       </a>
     </div>
   </div>

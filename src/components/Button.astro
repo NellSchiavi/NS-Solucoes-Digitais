@@ -3,7 +3,7 @@ interface Props {
   href: string;
   variant?: 'primary' | 'secondary' | 'ghost';
   size?: 'md' | 'lg';
-  icon?: 'arrow-right' | 'whatsapp' | 'chevron-right' | 'none';
+  icon?: 'arrow-right' | 'whatsapp' | 'chevron-right' | 'external' | 'none';
   class?: string;
   target?: '_blank';
 }
@@ -47,4 +47,5 @@ const variants = {
   <slot />
   {icon === 'arrow-right' && <Icon name="arrow-right" class="h-4 w-4" />}
   {icon === 'chevron-right' && <Icon name="chevron-right" class="h-4 w-4" />}
+  {icon === 'external' && <Icon name="external" class="h-4 w-4" />}
 </a>

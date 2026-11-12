@@ -1,24 +1,32 @@
 ---
 import Button from './Button.astro';
 import { buildWhatsAppLink } from '../lib/whatsapp';
+import { withBase } from '../lib/url';
 ---
 
-<section class="border-t border-[var(--color-border)] py-20 sm:py-28" aria-label="Chamada para orçamento">
+<section class="border-t border-[var(--color-border)] py-20 sm:py-28" aria-labelledby="cta-final-title">
   <div class="mx-auto max-w-4xl px-5 text-center sm:px-8">
-    <div class="relative overflow-hidden rounded-3xl border border-[var(--color-border-strong)] bg-[var(--color-surface)] px-6 py-14 sm:px-16 sm:py-20">
-      <div class="pointer-events-none absolute inset-0 -z-10 bg-[radial-gradient(600px_300px_at_50%_0%,rgb(var(--brand-rgb)/0.10),transparent_70%)]"></div>
+    <div class="relative isolate overflow-hidden rounded-3xl border border-[var(--color-border-strong)] bg-[var(--color-surface)] px-6 py-14 sm:px-16 sm:py-20">
+      <div class="pointer-events-none absolute inset-0 -z-10" aria-hidden="true">
+        <div class="absolute inset-0 bg-[radial-gradient(600px_300px_at_50%_0%,rgb(var(--brand-rgb)/0.12),transparent_70%)]"></div>
+        <div class="absolute -left-12 bottom-0 h-40 w-40 -skew-x-12 border border-[var(--color-brand-500)]/15"></div>
+      </div>
 
-      <h2 class="font-[var(--font-display)] text-3xl font-bold tracking-tight text-white sm:text-4xl">
-        Tem uma ideia? Vamos tirar do papel.
+      <h2 id="cta-final-title" class="font-[var(--font-display)] text-3xl font-bold uppercase tracking-tight text-white sm:text-4xl">
+        Sua ideia em um site <span class="text-[var(--color-brand-400)]">de verdade</span>.
       </h2>
       <p class="mx-auto mt-4 max-w-xl text-base leading-relaxed text-[var(--color-ink-muted)]">
-        Me conta o que você precisa e eu te retorno com os próximos passos
-        para transformar isso em um site ou sistema de verdade.
+        Conte o que a sua empresa precisa. O retorno vem direto do
+        desenvolvedor responsável, com os próximos passos para tirar o
+        projeto do papel.
       </p>
-
-      <div class="mt-9 flex justify-center">
-        <Button href={buildWhatsAppLink()} target="_blank" variant="primary" size="lg" icon="whatsapp">
+      <div class="mt-9 flex flex-col justify-center gap-3 sm:flex-row">
+        <Button href={buildWhatsAppLink()} target="_blank" variant="primary" size="lg" icon="whatsapp" class="w-full sm:w-auto">
           Solicitar orçamento
+          {' '}<span class="sr-only">pelo WhatsApp (abre em nova aba)</span>
+        </Button>
+        <Button href={withBase('/#portfolio')} variant="secondary" size="lg" icon="arrow-right" class="w-full sm:w-auto">
+          Conhecer projetos
         </Button>
       </div>
     </div>

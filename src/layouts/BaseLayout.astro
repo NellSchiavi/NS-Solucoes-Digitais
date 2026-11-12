@@ -27,19 +27,6 @@ const canonicalURL = Astro.site ? new URL(Astro.url.pathname, Astro.site) : unde
     <link rel="icon" type="image/svg+xml" href={withBase('/favicon.svg')} />
     <meta name="theme-color" content="#060f0a" />
 
-    <!--
-      Aplica o tema salvo (seletor no Header) antes da primeira pintura,
-      evitando "piscar" o verde ao carregar com o roxo escolhido. Sem
-      escolha salva (ou sem acesso ao localStorage), fica o verde padrão.
-    -->
-    <script is:inline>
-      try {
-        if (localStorage.getItem('ns-theme') === 'purple') {
-          document.documentElement.dataset.theme = 'purple';
-        }
-      } catch (e) {}
-    </script>
-
     <meta property="og:type" content="website" />
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />

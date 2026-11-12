@@ -89,7 +89,7 @@ const showDemoNotes = primaryAction?.kind === 'demo' && data.demoNotes.length > 
           {primaryAction && (
             <Button href={primaryAction.href} target="_blank" variant="primary" size="lg" icon="arrow-right" class="w-full sm:w-auto">
               {primaryAction.label}
-              <span class="sr-only">(abre em nova aba)</span>
+              {' '}<span class="sr-only">(abre em nova aba)</span>
             </Button>
           )}
           <Button
@@ -101,7 +101,7 @@ const showDemoNotes = primaryAction?.kind === 'demo' && data.demoNotes.length > 
             class="w-full sm:w-auto"
           >
             Solicitar orçamento
-            <span class="sr-only">pelo WhatsApp (abre em nova aba)</span>
+            {' '}<span class="sr-only">pelo WhatsApp (abre em nova aba)</span>
           </Button>
         </div>
 
@@ -215,12 +215,12 @@ const showDemoNotes = primaryAction?.kind === 'demo' && data.demoNotes.length > 
         <div class="mt-7 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
           <Button href={whatsAppLink} target="_blank" variant="primary" size="lg" icon="whatsapp" class="w-full sm:w-auto">
             Solicitar orçamento
-            <span class="sr-only">pelo WhatsApp (abre em nova aba)</span>
+            {' '}<span class="sr-only">pelo WhatsApp (abre em nova aba)</span>
           </Button>
           {primaryAction && (
             <Button href={primaryAction.href} target="_blank" variant="secondary" size="lg" icon="arrow-right" class="w-full sm:w-auto">
               {primaryAction.label}
-              <span class="sr-only">(abre em nova aba)</span>
+              {' '}<span class="sr-only">(abre em nova aba)</span>
             </Button>
           )}
         </div>

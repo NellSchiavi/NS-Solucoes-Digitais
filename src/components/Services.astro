@@ -1,97 +1,153 @@
 ---
+/**
+ * Serviços da NS. Cada serviço aponta para os cases reais que o
+ * comprovam (slugs da coleção `projects`); serviços sem case publicado
+ * não recebem link, em vez de associar um projeto que não o demonstra.
+ * Nenhuma condição comercial (prazo, preço, plano) é prometida aqui.
+ */
 import Icon from './Icon.astro';
-import { buildWhatsAppLink } from '../lib/whatsapp';
+import { getPortfolioProjects } from '../lib/projects';
+import { buildWhatsAppLink, WHATSAPP_MESSAGES, type WhatsAppTopic } from '../lib/whatsapp';
+import { withBase } from '../lib/url';
 
-const services = [
+type IconName = 'monitor' | 'layers' | 'kanban' | 'calendar' | 'plug' | 'chart' | 'whatsapp' | 'wrench' | 'search';
+
+interface Service {
+  icon: IconName;
+  title: string;
+  description: string;
+  topic: WhatsAppTopic;
+  cases: string[];
+}
+
+const services: Service[] = [
   {
-    icon: 'monitor' as const,
-    title: 'Sites institucionais',
-    audience: 'Para negócios e profissionais',
-    description:
-      'Presença digital profissional que apresenta sua empresa, seus serviços e fortalece a credibilidade da marca.',
-    featured: true,
+    icon: 'monitor',
+    title: 'Sites institucionais e comerciais',
+    description: 'Presença digital profissional para apresentar a empresa, os serviços e os canais de contato.',
+    topic: 'site',
+    cases: ['dra-valdizia-melo', 'xc-regularizacoes'],
   },
   {
-    icon: 'layers' as const,
-    title: 'Sistemas Web',
-    audience: 'Para processos internos',
-    description:
-      'Plataformas sob medida para gerenciar processos, dados e fluxos de trabalho específicos do seu negócio.',
-    featured: true,
+    icon: 'layers',
+    title: 'Sistemas web personalizados',
+    description: 'Plataformas sob medida, com login, perfis de acesso e as regras do seu negócio.',
+    topic: 'sistema',
+    cases: ['escala-do-louvor', 'reurb-flow'],
   },
   {
-    icon: 'sliders' as const,
-    title: 'Landing pages',
-    audience: 'Para campanhas e conversão',
-    description: 'Páginas focadas em apresentar uma oferta e converter visitantes em contato.',
-    featured: false,
+    icon: 'kanban',
+    title: 'CRM e gestão de processos',
+    description: 'Acompanhamento de processos, etapas, documentos e responsáveis em um só lugar, com Kanban.',
+    topic: 'crm',
+    cases: ['reurb-flow'],
   },
   {
-    icon: 'devices' as const,
-    title: 'Apps personalizados',
-    audience: 'Para produtos digitais próprios',
-    description: 'Aplicações desenvolvidas sob medida para a necessidade específica do seu negócio.',
-    featured: false,
+    icon: 'calendar',
+    title: 'Agendamento online',
+    description: 'Agenda com horários disponíveis, confirmação para o cliente e painel para gerenciar os atendimentos.',
+    topic: 'agendamento',
+    cases: ['dra-valdizia-melo'],
   },
   {
-    icon: 'puzzle' as const,
-    title: 'Soluções sob medida',
-    audience: 'Para integrações e automação',
-    description: 'Integrações entre sistemas e automação de processos para digitalizar rotinas manuais.',
-    featured: false,
+    icon: 'plug',
+    title: 'Automações e integrações',
+    description: 'Notificações automáticas por e-mail, integração com mapas e conexão entre sistemas.',
+    topic: 'integracoes',
+    cases: ['reurb-flow', 'dra-valdizia-melo'],
+  },
+  {
+    icon: 'chart',
+    title: 'Dashboards e indicadores',
+    description: 'Painéis com visão geral, progresso e prazos para acompanhar a operação.',
+    topic: 'dashboards',
+    cases: ['reurb-flow', 'escala-do-louvor'],
+  },
+  {
+    icon: 'whatsapp',
+    title: 'Integrações com WhatsApp',
+    description: 'Contato com mensagem pronta e notificações de processo pelo WhatsApp.',
+    topic: 'whatsapp',
+    cases: ['reurb-flow'],
+  },
+  {
+    icon: 'wrench',
+    title: 'Manutenção e evolução',
+    description: 'Ajustes, melhorias e novas funcionalidades em sites e sistemas já existentes.',
+    topic: 'manutencao',
+    cases: [],
+  },
+  {
+    icon: 'search',
+    title: 'SEO e otimização de sites',
+    description: 'Estrutura técnica, desempenho e boas práticas para o site ser bem encontrado nas buscas.',
+    topic: 'seo',
+    cases: [],
   },
 ];
+
+// Nome curto de cada case para os links ("Dra. Valdizia Melo — Advocacia…" → "Dra. Valdizia Melo").
+const projects = await getPortfolioProjects();
+const caseNames = new Map(projects.map((p) => [p.id, p.data.name.split(' — ')[0]]));
 ---
 
-<section id="servicos" class="scroll-mt-20 border-t border-[var(--color-border)] py-20 sm:py-28" aria-label="Serviços">
+<section id="servicos" class="relative scroll-mt-20 border-t border-[var(--color-border)] py-20 sm:py-28" aria-labelledby="servicos-title">
   <div class="mx-auto max-w-7xl px-5 sm:px-8">
     <div class="max-w-2xl">
-      <span class="text-xs font-semibold uppercase tracking-[0.14em] text-[var(--color-brand-400)]">
-        O que eu faço
-      </span>
-      <h2 class="mt-3 font-[var(--font-display)] text-3xl font-bold tracking-tight text-white sm:text-4xl">
-        Soluções digitais para cada etapa do seu negócio
+      <span class="ns-eyebrow">Serviços</span>
+      <h2 id="servicos-title" class="mt-3 font-[var(--font-display)] text-3xl font-bold tracking-tight text-white sm:text-4xl">
+        Do site ao sistema de gestão
       </h2>
       <p class="mt-4 text-base leading-relaxed text-[var(--color-ink-muted)]">
-        Do site que apresenta sua empresa ao sistema que organiza a sua
-        operação: cada projeto é desenvolvido para a necessidade específica
-        do seu negócio.
+        Soluções digitais desenvolvidas sob medida para a necessidade de cada
+        empresa. Sempre que possível, veja o serviço aplicado em um projeto real.
       </p>
     </div>
 
-    <div class="mt-12 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
-      {services.map((service) => (
-        <article
-          class:list={[
-            'group relative overflow-hidden rounded-2xl border border-[var(--color-border)] bg-[var(--color-surface)] p-7 transition-colors hover:border-[var(--color-brand-500)]/50',
-            service.featured ? 'lg:col-span-2' : 'lg:col-span-1',
-          ]}
-        >
-          <div class="flex h-11 w-11 items-center justify-center rounded-xl bg-[var(--color-brand-500)]/12 text-[var(--color-brand-400)]">
-            <Icon name={service.icon} class="h-5 w-5" />
-          </div>
-          <h3 class="mt-5 text-lg font-semibold text-white">{service.title}</h3>
-          <p class="mt-1 text-xs font-medium uppercase tracking-wide text-[var(--color-ink-faint)]">
-            {service.audience}
-          </p>
-          <p class="mt-3 text-sm leading-relaxed text-[var(--color-ink-muted)]">
-            {service.description}
-          </p>
-        </article>
-      ))}
-    </div>
+    <ul class="mt-12 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
+      {services.map((service) => {
+        const cases = service.cases.filter((slug) => caseNames.has(slug));
+        return (
+          <li class="group relative flex flex-col overflow-hidden rounded-2xl border border-[var(--color-border)] bg-[var(--color-surface)] p-6 transition-colors hover:border-[var(--color-brand-500)]/50 sm:p-7">
+            <div class="pointer-events-none absolute -right-8 -top-8 h-20 w-20 -skew-x-12 border border-[var(--color-brand-500)]/0 transition-colors group-hover:border-[var(--color-brand-500)]/25" aria-hidden="true"></div>
+            <div class="flex h-11 w-11 items-center justify-center rounded-xl bg-[var(--color-brand-500)]/12 text-[var(--color-brand-400)]">
+              <Icon name={service.icon} class="h-5 w-5" />
+            </div>
+            <h3 class="mt-5 text-lg font-semibold text-white">{service.title}</h3>
+            <p class="mt-2 flex-1 text-sm leading-relaxed text-[var(--color-ink-muted)]">
+              {service.description}
+            </p>
 
-    <p class="mt-10 text-sm text-[var(--color-ink-muted)]">
-      Precisa de algo diferente?
-      <a
-        href={buildWhatsAppLink()}
-        target="_blank"
-        rel="noopener noreferrer"
-        class="inline-flex items-center gap-1 font-semibold text-white transition-colors hover:text-[var(--color-brand-400)]"
-      >
-        Me conta sua ideia
-        <Icon name="arrow-right" class="h-4 w-4" />
-      </a>
-    </p>
+            {cases.length > 0 && (
+              <p class="mt-4 text-xs text-[var(--color-ink-faint)]">
+                Na prática:{' '}
+                {cases.map((slug, index) => (
+                  <>
+                    {index > 0 && ' · '}
+                    <a
+                      href={withBase(`/portfolio/${slug}/`)}
+                      class="font-medium text-[var(--color-ink-muted)] underline decoration-[var(--color-border-strong)] underline-offset-4 hover:text-[var(--color-brand-400)] hover:decoration-[var(--color-brand-500)]"
+                    >
+                      {caseNames.get(slug)}
+                    </a>
+                  </>
+                ))}
+              </p>
+            )}
+
+            <a
+              href={buildWhatsAppLink(WHATSAPP_MESSAGES[service.topic])}
+              target="_blank"
+              rel="noopener noreferrer"
+              class="mt-5 inline-flex items-center gap-1.5 self-start text-sm font-semibold text-white transition-colors hover:text-[var(--color-brand-400)]"
+            >
+              <Icon name="whatsapp" class="h-4 w-4 text-[var(--color-brand-500)]" />
+              Falar sobre este serviço
+              {' '}<span class="sr-only">: {service.title}, pelo WhatsApp (abre em nova aba)</span>
+            </a>
+          </li>
+        );
+      })}
+    </ul>
   </div>
 </section>

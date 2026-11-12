@@ -1,4 +1,4 @@
-import type { CollectionEntry } from 'astro:content';
+import { getCollection, type CollectionEntry } from 'astro:content';
 import { WHATSAPP_MESSAGES } from './whatsapp';
 
 /**
@@ -11,6 +11,25 @@ import { WHATSAPP_MESSAGES } from './whatsapp';
  */
 
 type ProjectData = CollectionEntry<'projects'>['data'];
+
+/** Projetos visíveis no site, na ordem do portfólio (destaques primeiro). */
+export async function getPortfolioProjects() {
+  const projects = await getCollection('projects', ({ data }) => data.visibility !== 'oculto');
+  return projects.sort((a, b) => {
+    if (a.data.featured !== b.data.featured) return a.data.featured ? -1 : 1;
+    return a.data.order - b.data.order;
+  });
+}
+
+/**
+ * Primeiro projeto com demonstração pública, para os destaques da Home.
+ * Vem do conteúdo (demoUrl), nunca de um link fixo no componente: se a
+ * demonstração sair do ar e o campo for removido, os destaques somem junto.
+ */
+export async function getFeaturedDemo() {
+  const projects = await getPortfolioProjects();
+  return projects.find((project) => project.data.visibility === 'publico' && project.data.demoUrl);
+}
 
 export interface ProjectAction {
   kind: 'demo' | 'site';
